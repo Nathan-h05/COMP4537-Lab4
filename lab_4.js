@@ -1,15 +1,19 @@
+let url = require('url'); // url parsing
+let msg = require('../../../lang/en/en.js'); // langauge file access
 
+const {post} = require('./api_post.js');
+const {get} = require('./api_get.js');
 
 exports.lab4_activate = (req, res) => {
     let q = url.parse(req.url, true);
-    let paths = q.pathname.split('/').filter(Boolean).filter(p => !p.endsWith('.txt')); //retrieves all valid path names
-    let path_specifier = paths[paths.length - 1];
 
-    if(path_specifier == 'getDate') getDate_res(req, res);
-    else if (path_specifier == 'writeFile') writeFile_res(req, res);
-    else {
-        //add if statements here that calls each function.
-        res.writeHead(400, {'Content-Type': 'text/html'});
+    //Re routes based on request method
+    if(req.method === 'GET') 
+        get(req, res); 
+    else if (req.method === 'POST') 
+        post(req, res);
+    else { // request is non existent we give an internal error
+        res.writeHead(404, {'Content-Type': 'text/html',});
         res.write(
             `<div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;">
                     <h1 style="color: red; text-align: center;">${msg.badReqMsg}</h1>
