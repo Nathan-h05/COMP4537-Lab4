@@ -17,7 +17,8 @@ exports.get = (req, res) => {
     if (!word) { // Check if word is missing or empty
         res.writeHead(400, { 
             'Content-Type': 'application/json', 
-            'Access-Control-Allow-Origin': '*' });
+            'Access-Control-Allow-Origin': '*' 
+        });
         res.end(JSON.stringify({ 
             message: 'Word parameter is required.' }));
         return;
@@ -26,7 +27,8 @@ exports.get = (req, res) => {
     if (dictionary[word]) { // Check if word exists in dictionary
         res.writeHead(200, { 
             'Content-Type': 'application/json', 
-            'Access-Control-Allow-Origin': '*'});
+            'Access-Control-Allow-Origin': '*'
+        });
         res.end(JSON.stringify({
             word: word,
             definition: dictionary[word],
@@ -35,7 +37,8 @@ exports.get = (req, res) => {
     } else { // Word not found in dictionary
         res.writeHead(404, { 
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*' });
+            'Access-Control-Allow-Origin': '*' 
+        });
         res.end(JSON.stringify({ 
             message: `Request# ${req.requestCount}, word '${word}' not found!` 
         }));
