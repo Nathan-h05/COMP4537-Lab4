@@ -20,18 +20,18 @@ exports.post = (req, res) => {
         const definition = data.definition;
 
         if (!word || !definition) { // Check if word or definition is missing
-            res.writeHead(400, { 'Content-Type': 'application/json' });
+            res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
             res.end(JSON.stringify({ 
                 message: 'Both word and definition are required.' }));
             return;
         }
 
         if (dictionary[word]) { // Check if word already exists in dictionary
-            res.writeHead(409, { 'Content-Type': 'application/json' });
+            res.writeHead(409, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
             res.end(JSON.stringify({ message: `Warning! '${word}' already exists.` }));
         } else { 
             dictionary[word] = definition; // Add new word and definition to dictionary
-            res.writeHead(201, { 'Content-Type': 'application/json' });
+            res.writeHead(201, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
             res.end(JSON.stringify({ 
                 message: `New entry recorded: "${word} : ${definition}"`,
                 totalEntries: Object.keys(dictionary).length

@@ -15,21 +15,27 @@ exports.get = (req, res) => {
     const word = normalizeWord(q.word.toLowerCase()); // Normalize and lowercase word
 
     if (!word) { // Check if word is missing or empty
-        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.writeHead(400, { 
+            'Content-Type': 'application/json', 
+            'Access-Control-Allow-Origin': '*' });
         res.end(JSON.stringify({ 
             message: 'Word parameter is required.' }));
         return;
     }
 
     if (dictionary[word]) { // Check if word exists in dictionary
-        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.writeHead(200, { 
+            'Content-Type': 'application/json', 
+            'Access-Control-Allow-Origin': '*'});
         res.end(JSON.stringify({
             word: word,
             definition: dictionary[word],
             totalRequests: req.requestCount // Request count
         }));
     } else { // Word not found in dictionary
-        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.writeHead(404, { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*' });
         res.end(JSON.stringify({ 
             message: `Request# ${req.requestCount}, word '${word}' not found!` 
         }));
