@@ -12,13 +12,8 @@ exports.lab4_activate = (req, res) => {
         get(req, res); 
     else if (req.method === 'POST') 
         post(req, res);
-    else { // request is non existent we give an internal error
-        res.writeHead(404, {'Content-Type': 'text/html',});
-        res.write(
-            `<div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw;">
-                    <h1 style="color: red; text-align: center;">404 Page not found</h1>
-            </div>`
-        );
-        res.end();
+    else { 
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: '404 Page not found' }));
     }   
 }
