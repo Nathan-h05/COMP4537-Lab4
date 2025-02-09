@@ -1,17 +1,12 @@
+// Chatgpt was used in creation of the code
+
 // Imports
 const url = require('url');
-const dictionary = require('./dictionary.js').dictionary;
-
-function normalizeWord(word) {
-    return word
-        .trim() // Remove leading/trailing spaces
-        .replace(/\s*\/+$/, '') // Remove trailing slashes and any spaces before them
-        .replace(/\s+/g, ' '); // Normalize multiple spaces to a single space
-}
+const { dictionary, globalRequestCount } = require('./dictionary.js');
+const { normalizeWord, isValidText } = require('./utils.js'); 
 
 exports.get = (req, res) => {
     const q = url.parse(req.url, true).query; // Parse the URL to get query parameters
-    // const word = q.word.toLowerCase(); // Extract and convert word to lowercase
     const word = normalizeWord(q.word.toLowerCase()); // Normalize and lowercase word
 
     if (!word) { // Check if word is missing or empty
@@ -20,7 +15,22 @@ exports.get = (req, res) => {
             'Access-Control-Allow-Origin': '*' 
         });
         res.end(JSON.stringify({ 
-            message: 'Word parameter is required.' }));
+            message: 'Word parameter is required.',
+            totalRequests: globalRequestCount.requestCount 
+        }));
+        return;
+    }
+
+    // Validate word and definition
+    if (!isValidText(word)) {
+        res.writeHead(400, { 
+            'Content-Type': 'application/json', 
+            'Access-Control-Allow-Origin': '*' 
+        });
+        res.end(JSON.stringify({ 
+            message: 'Word must contain only letters, spaces, hyphens, and apostrophes.',
+            totalRequests: globalRequestCount.requestCount
+        }));
         return;
     }
 
@@ -32,7 +42,7 @@ exports.get = (req, res) => {
         res.end(JSON.stringify({
             word: word,
             definition: dictionary[word],
-            totalRequests: req.requestCount // Request count
+            totalRequests: globalRequestCount.requestCount
         }));
     } else { // Word not found in dictionary
         res.writeHead(404, { 
@@ -40,7 +50,8 @@ exports.get = (req, res) => {
             'Access-Control-Allow-Origin': '*' 
         });
         res.end(JSON.stringify({ 
-            message: `Request# ${req.requestCount}, word '${word}' not found!` 
+            message: `Request# ${globalRequestCount.requestCount}, word '${word}' not found!`,
+            totalRequests: globalRequestCount.requestCount
         }));
     }
 };
