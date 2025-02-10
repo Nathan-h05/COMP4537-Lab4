@@ -50,7 +50,7 @@ exports.get = (req, res) => {
             'Access-Control-Allow-Origin': '*' 
         });
         res.end(JSON.stringify({ 
-            message: `Request# ${globalRequestCount.requestCount}, word '${word}' not found!`,
+            message: `Word '${word}' not found!`,
             totalRequests: globalRequestCount.requestCount
         }));
     }
